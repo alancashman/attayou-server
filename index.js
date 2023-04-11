@@ -140,7 +140,9 @@ app.delete("/habits/:habitId", async (req, res) => {
   try {
     let habits = await readHabits();
     const { habitId } = req.params;
+    console.log(`Habit id: `, habitId);
     const foundHabit = habits.find((habit) => habit.id === habitId);
+    console.log("found habit: ", foundHabit);
     habits = habits.filter((habit) => habit !== foundHabit);
     writeHabits(habits);
     res.status(204).send("Deleted");
