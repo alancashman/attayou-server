@@ -1,13 +1,14 @@
-/**
- * @param { import("knex").Knex } knex
- * @returns { Promise<void> } 
- */
-exports.seed = async function(knex) {
-  // Deletes ALL existing entries
-  await knex('table_name').del()
-  await knex('table_name').insert([
-    {id: 1, colName: 'rowValue1'},
-    {id: 2, colName: 'rowValue2'},
-    {id: 3, colName: 'rowValue3'}
-  ]);
+// import seed data files, arrays of objects
+const habitsData = require("../seed_data/habits");
+
+exports.seed = function (knex) {
+  console.log(habitsData);
+  return knex("habits")
+    .del()
+    .then(function () {
+      return knex("habits").insert(habitsData);
+    });
+  // .then(() => {
+  //   return knex("habits").del();
+  // });
 };

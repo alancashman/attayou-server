@@ -1,14 +1,6 @@
-const express = require("express");
-const router = express.router();
+const router = require("express").Router();
+const habitsController = require("../controllers/habitsController");
 
-// Read habits from JSON file
-function readHabits() {
-  const habitsFile = fs.readFileSync("./data/habits.json");
-  const habitsData = JSON.parse(habitsFile);
-  return habitsData;
-}
+router.route("/").get(habitsController.index).post(habitsController.addHabit);
 
-router.get("/habits", (req, res) => {
-  const habits = readHabits();
-  return habits;
-});
+module.exports = router;

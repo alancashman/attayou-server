@@ -8,20 +8,17 @@ const PORT = process.env.PORT || 8080;
 const CORS_ORIGIN = process.env.CORS_ORIGIN;
 
 const app = express();
-// const habitsRoutes = require("./routes/habitsRoutes");
+const habitsRoutes = require("./routes/habitsRoutes");
 
 app.use(express.json());
 app.use(cors({ origin: CORS_ORIGIN }));
-
 // app.use("/habits", habitsRoutes);
 
-////// READ HABITS
+/////////////////////////
+// JSON ROUTING
+/////////////////////////
 
-// function readHabits() {
-//   const habitsFile = fs.readFileSync("./data/habits.json");
-//   const habitsData = JSON.parse(habitsFile);
-//   return habitsData;
-// }
+//// READ HABITS
 
 function readHabits() {
   return new Promise((resolve, reject) => {
@@ -37,18 +34,7 @@ function readHabits() {
   });
 }
 
-// const readHabits = (callback) => {
-//   fs.readFile("./data/habits.json", "utf-8", callback);
-// };
-
 ////// WRITE HABITS
-
-// function writeHabits(data) {
-//   const stringifiedData = JSON.stringify(data);
-//   fs.writeFile("./data/habits.json", stringifiedData, (err) =>
-//     console.error(err)
-//   );
-// }
 
 function writeHabits(data) {
   const stringifiedData = JSON.stringify(data);
@@ -62,13 +48,6 @@ function writeHabits(data) {
     });
   });
 }
-
-////// GET habits
-
-// app.get("/habits", (req, res) => {
-//   const habits = readHabits();
-//   res.send(habits);
-// });
 
 // GET habits
 app.get("/habits", async (req, res) => {
@@ -90,6 +69,7 @@ app.post("/habits", (req, res) => {
       }
       console.log(habitsData);
       const name = req.body.name;
+      const description = req.body.description;
       if (!name) {
         res.status(400).send("New habits must have a name!");
         return;
@@ -103,6 +83,7 @@ app.post("/habits", (req, res) => {
             done: false,
           },
         ],
+        description,
         user_id: 1,
       };
       habitsData.push(newHabit);
@@ -135,6 +116,8 @@ app.put("/habits/:habitId", async (req, res) => {
     res.status(500).send("Failed to read habits data");
   }
 });
+
+// DELETE habit
 
 app.delete("/habits/:habitId", async (req, res) => {
   try {
