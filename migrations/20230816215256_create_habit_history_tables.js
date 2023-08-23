@@ -12,6 +12,7 @@ exports.up = function (knex) {
     .createTable("history", (table) => {
       table.string("id").primary();
       table.string("date").notNullable();
+      table.boolean("done").notNullable().defaultTo(false);
       table
         .string("habit_id")
         .references("habit.id")

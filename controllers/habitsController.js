@@ -6,7 +6,7 @@ const history = "history";
 
 exports.index = (_req, res) => {
   knex("habit")
-    .join("history", `${habit}.id`, "=", `${history}.habit_id`)
+    // .join("history", `${habit}.id`, "=", `${history}.habit_id`)
     .then((data) => {
       res.status(200).json(data);
     })
@@ -15,16 +15,17 @@ exports.index = (_req, res) => {
     });
 };
 
-// knex
-//   .select(`${table1}.id as id1`, `${table2}.id as id2`, `${table1}.column_name as value1`, `${table2}.column_name as value2`) // Select the columns you need
-//   .from(table1)
-//   .join(table2, `${table1}.id`, '=', `${table2}.id`) // Join based on the id column
-//   .then((results) => {
-//     console.log(results); // Process the combined results here
-//   })
-//   .catch((error) => {
-//     console.error(error);
-//   });
+exports.history = (req, res) => {
+  knex("habit")
+    .where({ habit_id: req.params.id })
+    .join("history", `${habit}.id`, "=", `${history}.habit_id`)
+    .then((data) => {
+      res.status(200).json(data);
+    })
+    .catch((err) => {
+      res.status(400).send(`Error retrieving habits: ${err}`);
+    });
+};
 
 exports.addHabit = (req, res) => {
   if (!req.body.name) {
@@ -50,6 +51,46 @@ exports.addHabit = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send("Error creating new habit: ", err.message);
+    });
+};
+
+exports.addHistory = (req, res) => {
+  console.log(req.body);
+  const { habit_id, date, done } = req.body;
+  knex("history")
+    .insert({ habit_id, date, done, id: uuid() })
+    .then(([insertedId]) => {
+      console.log(insertedId);
+      res.status(201).json({ id: insertedId });
+    })
+    .catch((err) => {
+      res.status(500).send(err);
+    });
+};
+
+exports.adjustHistory = (req, res) => {
+  const { habit_id, date } = req.body;
+  knex("history")
+    .select("done")
+    .where({ habit_id: habit_id, date: date })
+    .then((data) => {
+      if (data.length === 0) {
+        console.log("No results found for that date");
+        return;
+      }
+      const currentDoneStatus = data[0].done;
+      const newDoneStatus = currentDoneStatus === 0 ? 1 : 0;
+      knex("history")
+        .where({ habit_id: habit_id, date: date })
+        .update({ done: newDoneStatus })
+        .then((data) => {
+          console.log("Update successful");
+          res.status(200).json(data);
+        });
+    })
+
+    .catch((err) => {
+      res.status(500).send("An error occurred while adjusting history: ", err);
     });
 };
 

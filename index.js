@@ -11,7 +11,7 @@ const app = express();
 const habitsRoutes = require("./routes/habitsRoutes");
 
 app.use(express.json());
-app.use(cors({ origin: CORS_ORIGIN }));
+app.use(cors());
 app.use("/habits", habitsRoutes);
 
 /////////////////////////
@@ -20,34 +20,34 @@ app.use("/habits", habitsRoutes);
 
 //// READ HABITS
 
-function readHabits() {
-  return new Promise((resolve, reject) => {
-    fs.readFile("./data/habits.json", "utf-8", (err, data) => {
-      if (err) {
-        reject(err);
-      } else {
-        // console.log("Data ", data);
-        const habitsData = JSON.parse(data);
-        resolve(habitsData);
-      }
-    });
-  });
-}
+// function readHabits() {
+//   return new Promise((resolve, reject) => {
+//     fs.readFile("./data/habits.json", "utf-8", (err, data) => {
+//       if (err) {
+//         reject(err);
+//       } else {
+//         // console.log("Data ", data);
+//         const habitsData = JSON.parse(data);
+//         resolve(habitsData);
+//       }
+//     });
+//   });
+// }
 
 ////// WRITE HABITS
 
-function writeHabits(data) {
-  const stringifiedData = JSON.stringify(data);
-  return new Promise((resolve, reject) => {
-    fs.writeFile("./data/habits.json", stringifiedData, (err) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve();
-      }
-    });
-  });
-}
+// function writeHabits(data) {
+//   const stringifiedData = JSON.stringify(data);
+//   return new Promise((resolve, reject) => {
+//     fs.writeFile("./data/habits.json", stringifiedData, (err) => {
+//       if (err) {
+//         reject(err);
+//       } else {
+//         resolve();
+//       }
+//     });
+//   });
+// }
 
 // // GET habits
 // app.get("/habits", async (req, res) => {
