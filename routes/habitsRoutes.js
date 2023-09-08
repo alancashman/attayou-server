@@ -3,12 +3,13 @@ const habitsController = require("../controllers/habitsController");
 
 router.route("/").get(habitsController.index).post(habitsController.addHabit);
 
+router.route("/history").get(habitsController.getHistory);
+
 router
   .route("/:id")
-  .get(habitsController.history)
+  .get(habitsController.habitHistory)
   .post(habitsController.addHistory)
   .put(habitsController.adjustHistory)
   .delete(habitsController.deleteHabit);
-// .delete(habitsController.deleteHistory);
 
 module.exports = router;

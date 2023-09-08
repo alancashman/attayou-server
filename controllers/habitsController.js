@@ -15,7 +15,7 @@ exports.index = (_req, res) => {
     });
 };
 
-exports.history = (req, res) => {
+exports.habitHistory = (req, res) => {
   knex("habit")
     .where({ habit_id: req.params.id })
     .join("history", `${habit}.id`, "=", `${history}.habit_id`)
@@ -24,6 +24,17 @@ exports.history = (req, res) => {
     })
     .catch((err) => {
       res.status(400).send(`Error retrieving habits: ${err}`);
+    });
+};
+
+exports.getHistory = (req, res) => {
+  knex("history")
+    .join("habit", `${history}.habit_id`, `=`, `${habit}.id`)
+    .then((data) => {
+      res.status(200).json(data);
+    })
+    .catch((err) => {
+      res.status(400).send(`Error retrieving history: ${err}`);
     });
 };
 
